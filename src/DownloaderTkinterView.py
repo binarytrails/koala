@@ -3,8 +3,9 @@ import tkMessageBox
 
 class DownloaderView():
 
-    def __init__(self, controller):
+    def __init__(self, controller, outputLocation):
         self.controller = controller
+        self.outputLocation = outputLocation
         
         self.root = tk.Tk()
         self.root.option_add('*Dialog.msg.font', 'Helvetica 10')
@@ -32,7 +33,7 @@ class DownloaderView():
         self.inputDest = tk.Entry(self.frameMain)
         self.inputDest.grid(row=1, column=1)
         self.inputDest.config(width=50)
-        self.inputDest.insert(0, ".") #TODO write default location depending on OS
+        self.inputDest.insert(0, self.outputLocation)
          
         self.lblOutput = tk.Label(self.frameMain, text="System output")
         self.lblOutput.grid(row=2, column=0, sticky=tk.W)
@@ -60,11 +61,11 @@ class DownloaderView():
         
         if confirmed:
             self.txtOutput.insert(tk.END, "\nDownloading... Go eat a cookie.")
-            code, msg = self.controller.downloadFile(url, title)
+            code, msg = self.controller.downloadFile(url, self.outputLocation, title)
             if code is not 0:
                 self.txtOutput.insert(tk.END, "\nError " + str(code) + " " + msg)
                 return
-            self.txtOutput.insert(tk.END, "Finished!")
+            self.txtOutput.insert(tk.END, "\nFinished!")
 
     def center_window(self, w, h):
         ws = self.root.winfo_screenwidth()
