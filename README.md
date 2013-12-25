@@ -4,8 +4,8 @@ Cross-platform LightYoutube2MP3 Converter
 
 Dependencies
 ------------
-Tkinter
-youtube-dl
+* Tkinter
+* youtube-dl
 
 TODO
 ----
