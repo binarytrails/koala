@@ -13,7 +13,7 @@ class TkinterApp(object):
         pass
                   
     def download(self, url, title):
-        thread = Thread(target = self.simulateDownload, args=[])
+        thread = Thread(target = self._simulateDownload, args=[])
         thread.start()
 
     def _youtubeDownload(self, url, title):
@@ -28,7 +28,7 @@ class TkinterApp(object):
         percent = progress * 100. / file_size
         self.downloaderView.updateDownloadProgressText(percent)
         
-    def simulateDownload(self):
+    def _simulateDownload(self):
         for p in range(0, 100):
             self.updateDownloadStatus(p, 100)
             sleep(0.01)

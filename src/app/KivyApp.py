@@ -15,8 +15,13 @@ class KivyApp(App):
     def setDefaults(self, windowTitle, defaultFolder):
         self.windowTitle = windowTitle
         self.defaultFolder = defaultFolder
-        
-    def _simulateDefaults(self):
+    
+    def download(self, progressBar, url, title):
+        thread = Thread(target = self._simulateDownload, args=[progressBar])
+        thread.start()
+    
+    def _simulateDownload(self, progressBar):
+        progressBar.value = 0
         for i in range(1,101):
             sleep(0.1)
-            self.progressBar.value += i
+            progressBar.value += i
