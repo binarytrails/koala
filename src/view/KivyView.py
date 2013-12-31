@@ -2,41 +2,44 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
 Builder.load_string("""
 <KivyView@ScreenManager>:
+    downloadButton: _downloadButton
     progressBar: _progressBar
-    destination: _destinationText
-    url: _urlText
+    destination: _destination
+    url: _url
     Screen:
         name: 'main'
         BoxLayout:
             orientation: 'vertical'
+            Button:
+                text: 'Back To Menu'
+                size_hint: 0.2, 0.1
+                on_press: root.current = 'menu'
             GridLayout:
                 cols: 2
                 Label:
                     text: 'Youtube URL'
-                    size_hint: 0.5, 1
                 TextInput:
-                    id: _urlText
+                    id: _url
                     text: 'http://youtu.be/YaG5SAw1n0c'
-                    size_hint: 0.5, 1
                 Label:
                     text: 'Output folder'
                 TextInput:
-                    id: _destinationText
+                    id: _destination
+                Label:
+                    text: 'Title'
+                TextInput:
+                    id: _title
+                Button:
+                    text: 'Convert'
+                    on_press: root.convert()
+                Button:
+                    id: _downloadButton
+                    text: 'Download'
+                    on_press: root.download()
             ProgressBar:
+                size_hint: 1, 0.1
                 id: _progressBar
                 max: 100
-            GridLayout:
-                cols: 2
-                Button:
-                    text: 'Menu'
-                    on_press: root.current = 'menu'
-                Button:
-                    text: 'Download'
-                    # You can do the opertion directly
-                    on_press: root.download()
-                Button:
-                    text: 'update test'
-                    on_press: _urlText.text = _destinationText.text
     Screen:
         name: 'menu'
         Button:
@@ -56,8 +59,20 @@ class KivyView(ScreenManager):
     
     # define the multiplication of a function
     def download(self):
-        self.root.download(self.progressBar, self.url, "FooBarTitle")
+        self.root.download(self.url, "FooBarTitle")
+        
+    def convert(self):
+        pass
 
-    def updateDownloadStatus(self, value):
-        print self.progressBar
+    def getDownloadProgress(self):
+        return self.progressBar.value
+
+    def setDownloadProgress(self, value):
         self.progressBar.value = value
+        
+    def disableDownloadButton(self):
+        self.downloadButton.disabled = True
+    
+    def enableDownloadButton(self):
+        self.downloadButton.disabled = False
+        

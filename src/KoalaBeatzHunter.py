@@ -7,7 +7,7 @@ from view.KivyView import KivyView
 import sys, getopt
 from enum import Enum
 
-HELP_MESSAGE = "test.py -o <outputfolder>"
+HELP_MESSAGE = "KoalaBeatzHunter.py -o <outputfolder>"
 WINDOW_TITLE = "KoalaBeatzHunter"
 DEFAULT_FOLDER = "../../tmp/"
 
