@@ -1,13 +1,12 @@
 import Tkinter as tk
 import tkMessageBox
 
-class DownloaderView():
-    def __init__(self, controller, ouput):
-        self.controller = controller
-        self.ouput = ouput
+class TkinterView(object):
+    def __init__(self, app):
+        self.app = app
         
         self.root = tk.Tk()
-        self.root.title(self.controller.name)
+        self.root.title(self.app.windowTitle)
         self._center_window(505, 100)
         self.root.resizable(tk.FALSE, tk.FALSE)
         self.mainFrame = tk.Frame(bd=2, relief=tk.SUNKEN)
@@ -20,7 +19,7 @@ class DownloaderView():
         self.mainFrame.pack(fill=tk.BOTH, expand=True)
         
     def _makeUrlControls(self):
-        self.lblURL = tk.Label(self.mainFrame, text="Youtube url")
+        self.lblURL = tk.Label(self.mainFrame, text="Youtube URL")
         self.lblURL.grid(row=0, column=0, sticky=tk.W)
         
         self.urlEntry = tk.Entry(self.mainFrame)
@@ -35,7 +34,7 @@ class DownloaderView():
         self.destinationEntry = tk.Entry(self.mainFrame)
         self.destinationEntry.grid(row=1, column=1)
         self.destinationEntry.config(width=50)
-        self.destinationEntry.insert(0, self.ouput)
+        self.destinationEntry.insert(0, self.app.outputFolder)
     
     def _makedownloadProgressControls(self):
         self.downloadProgressLabel = tk.Label(self.mainFrame, text="Download")
@@ -43,7 +42,7 @@ class DownloaderView():
          
         self.downloadProgressEntry = tk.Entry(self.mainFrame)
         self.downloadProgressEntry.grid(row=2, column=1)
-        self.downloadProgressEntry.config(width=50)#, state='readonly')
+        self.downloadProgressEntry.config(width=50)
     
     def _makeDownloadAction(self):
         self.downloadButton = tk.Button(
@@ -69,6 +68,7 @@ class DownloaderView():
         self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
     def download(self):
+        self.app.download(self.urlEntry.get(), "Title")
         pass
 #         confirmed = tkMessageBox.askokcancel(
 #             "Confirm", "Video title: " + title,
@@ -84,4 +84,4 @@ class DownloaderView():
         self.downloadProgressEntry.insert(0, chr(8) * (int(value)*57/100))
         if int(value) is 100:
             self.downloadProgressEntry.delete(0, tk.END)
-            tkMessageBox.askokcancel(self.controller.name, "Downloading completed!")
+            tkMessageBox.askokcancel(self.app.windowTitle, "Downloading completed!")
