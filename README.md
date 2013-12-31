@@ -1,13 +1,14 @@
-LightYoutube2MP3
+KoalaBeatzHunter
 ================
-Cross-platform LightYoutube2MP3 Converter
+Cross-platform url to mp3 converter
 
-Dependencies
-------------
-* Tkinter
-* youtube-dl
+Available user interfaces
+-------------------------
+Tkinter
+Kivi
 
-TODO
-----
-* Dive into youtube-dl & make a new branch.
-* Make more cool interface, perhaps http://kivy.org/
+Important
+---------
+I will think before using Tkinter.
+I will try to avoid using Tkinter.
+I will never use Tkinter.
