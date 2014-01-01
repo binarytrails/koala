@@ -18,14 +18,9 @@ class TkinterApp(object):
 
     def _youtubeDownload(self, url, title):
         pass
-#         yt = Youtube.YouTube()
-#         #doesnt take http://youtu.be/
-#         yt.url = "http://www.youtube.com/watch?v=VeTMsLp_puY"
-#         video = yt.get("flv")
-#         video.download(TMP_FOLDER, on_progress=self.updateDownloadStatus)
     
-    def updateDownloadStatus(self, progress, file_size):
-        percent = progress * 100. / file_size
+    def updateDownloadStatus(self, bytes_received, file_size):
+        percent = bytes_received * 100. / file_size
         self.downloaderView.updateDownloadProgressText(percent)
         
     def _simulateDownload(self):

@@ -12,6 +12,7 @@ from Default import HELP_MESSAGE
 from Default import LaunchOptions
 
 import sys
+from downloader import Youtube
 
 PREFERRED_DEST = DEFAULT_DEST
 PREFERRED_UI = DEFAULT_UI
@@ -55,5 +56,6 @@ if __name__ == "__main__":
         view = KivyView()
         app.setDownloaderView(view)
         app.setDefaults(WINDOW_TITLE, PREFERRED_DEST)
+        app.setYoutubeDownloader(Youtube.YouTube())
         app.run()
         app.root.mainloop()

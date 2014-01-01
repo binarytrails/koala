@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
-from downloader.Exceptions import MultipleObjectsReturned, YouTubeError
-from downloader.Video import Video
-from downloader.Utilities import safe_filename
+from Exceptions import MultipleObjectsReturned, YouTubeError
+from Video import Video
+from Utilities import safe_filename
 from urllib import urlencode
 from urllib2 import urlopen
 from urlparse import urlparse, parse_qs, unquote

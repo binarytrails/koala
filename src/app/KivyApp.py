@@ -1,8 +1,9 @@
 from kivy.app import App
-
 from threading import Thread
 from time import sleep
 from threading import RLock
+
+import os
 
 def synchronized_with_attr(lock_name):
     def decorator(method):
@@ -27,6 +28,9 @@ class KivyApp(App):
         self.kivyView.build(self)
         return self.kivyView
     
+    def setYoutubeDownloader(self, downloader):
+        self.youtube = downloader
+    
     def setDownloaderView(self, kivyView):
         self.kivyView = kivyView
     
@@ -34,15 +38,39 @@ class KivyApp(App):
         self.windowTitle = windowTitle
         self.defaultFolder = defaultFolder
     
-    def download(self, url, title):
-        thread = Thread(target = self._simulateDownload, args=[])
+    def downloadAndConvert(self, url, title):
+        thread = Thread(target = self._downloadAndConvertVideoToMp3, args=[url, title])
         thread.start()
     
     @synchronized_with_attr("lock")
+    def _downloadAndConvertVideoToMp3(self, url, title):
+        self.kivyView.setStatusLabelText("Downloading")
+        self.kivyView.disableDownloadButton()
+        
+        self.youtube.url = url
+        #get highest resolution available for .mp4 
+        video = self.youtube.filter("mp4")[-1]
+        self.youtube.filename = title
+        
+        video.download(self.defaultFolder, on_progress=self.__updateDownloadStatus)
+        self.kivyView.enableDownloadButton()
+        self.kivyView.setStatusLabelText("Downloaded")
+        
+        #do convert
+        
+        os.remove(self.defaultFolder + title + ".mp4")
+    
+    @synchronized_with_attr("lock")
     def _simulateDownload(self):
+        self.kivyView.setStatusLabelText("Downloading")
         self.kivyView.disableDownloadButton()
         self.kivyView.setDownloadProgress(0)
         for progress in range(1,101):
             sleep(0.01)
             self.kivyView.setDownloadProgress(progress)
         self.kivyView.enableDownloadButton()
+        self.kivyView.setStatusLabelText("Downloaded")
+        
+    def __updateDownloadStatus(self, bytes_received, file_size):
+        percent = bytes_received * 100. / file_size
+        self.kivyView.setDownloadProgress(percent)
