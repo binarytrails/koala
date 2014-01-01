@@ -15,7 +15,7 @@ Cross-platform MVC url to mp3 converter
   </tr>
 </table>
 
-<b>UI</b>
+<b>Available UI</b>
 <table>
   <tr>
     <th>UI</th><th>Got View</th><th>Status</th>
@@ -30,7 +30,7 @@ Cross-platform MVC url to mp3 converter
 
 Problems
 --------
-1. Kivy: Cant update a field from an outside thread.
+1. Kivy: Cant update a field from an outside thread started by someone else than the KivyView from the user action.
 	* <b>Consequences</b>
 
 		> I have to break my MVC Pattern. View <-- Controller --> Data, Tools etc.
@@ -43,7 +43,7 @@ Problems
 
 	* <b>Solution</b>
 
-		> View --> Controller <--> Data, Tools etc.
+		> View <--> Controller <--> Data, Tools etc.
 
 Notes
 -----
