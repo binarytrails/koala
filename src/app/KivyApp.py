@@ -19,7 +19,8 @@ def synchronized_with_attr(lock_name):
         return synced_method
     return decorator
 
-class KivyApp(App): 
+class KivyApp(App):
+    
     def build(self):
         self.lock = RLock()
         App.title = self.windowTitle

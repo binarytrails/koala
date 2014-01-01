@@ -1,3 +1,18 @@
+from enum import Enum
+
+class UI(Enum):
+    KIVY=0,
+    TKINTER=1
+
+class LaunchOptions(Enum):
+    H = "h?",
+    D = "des=",
+    T = "tk",
+    K = "kivy"
+    
+WINDOW_TITLE = "KoalaBeatzHunter"
+DEFAULT_DEST = "../../tmp/"
+DEFAULT_UI = UI.KIVY
 HELP_MESSAGE = """
     __                      __
  .-'  `'.._...-----..._..-'`  '-.
@@ -11,12 +26,17 @@ HELP_MESSAGE = """
       \        \"/         /
        '.    =='^'==     .'
         `'--------------'
-        KoalaBeatzHunter
+         KoalaBeatzHunter
+
+Usage: ./KoalaBeatzHunter.py des=folder
+
+The default UI is Kivy, to change do:
+$ ./KoalaBeatzHunter.py tk
 
 Basic options:
-    -o            <outputfolder>
+    h?            <koala help message>
+    d=            <destination folder>
+    tk            <launches tkinter ui>
+    kivy          <launches kivy ui>
 
 (C) Koala from the north"""
-
-WINDOW_TITLE = "KoalaBeatzHunter"
-DEFAULT_FOLDER = "../../tmp/"

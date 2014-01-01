@@ -3,51 +3,57 @@ from app.TkinterApp import TkinterApp
 from view.TkinterView import TkinterView
 from app.KivyApp import KivyApp
 from view.KivyView import KivyView
-from Default import *
 
-import sys, getopt
-from enum import Enum
+from Default import UI
+from Default import WINDOW_TITLE
+from Default import DEFAULT_DEST
+from Default import DEFAULT_UI
+from Default import HELP_MESSAGE
+from Default import LaunchOptions
 
-class UI(Enum):
-    NONE=0,
-    KIVY=1,
-    TKINTER=1
+import sys
 
-def main(argv):
-    output = DEFAULT_FOLDER
-    ui = UI.KIVY
+PREFERRED_DEST = DEFAULT_DEST
+PREFERRED_UI = DEFAULT_UI
+
+def checkKoalaLaunchOptions(args):
     '''
-    The below options will be there if you remove Kivy imports.
-    Otherwise Kivy help overrides them.
+    Here are the koala help options.
+    $ ./KoalaBeatzHunter.py h?
     '''
-    try:
-        opts, args = getopt.getopt(argv, "hi:o:",["ofolder="])
-        if args.__len__() != 0:
-            pass
-    except getopt.GetoptError:
-        print HELP_MESSAGE
-        sys.exit(2)
-    
-    for opt, arg in opts:
-        if opt == '-h':
+    for arg in args:
+        #Help
+        if LaunchOptions.H[0] in arg:
             print HELP_MESSAGE
-            sys.exit()
-        elif opt in ("-o", "--ofolder"):
-            output = arg
+        #Destination folder
+        elif LaunchOptions.D[0] in arg:
+            global PREFERRED_DEST
+            PREFERRED_DEST = arg[len(LaunchOptions.D[0]):]
+        #Tkinter
+        elif LaunchOptions.T[0] in arg:
+            global PREFERRED_UI
+            PREFERRED_UI = UI.TKINTER
+        #Kivy
+        elif LaunchOptions.K[0] in arg:
+            global PREFERRED_UI
+            PREFERRED_UI = UI.KIVY
+        #Wrong options
+        else:
+            print HELP_MESSAGE
+            exit(0)
+
+if __name__ == "__main__":
+    checkKoalaLaunchOptions(sys.argv[1:])
     
-    if ui == UI.TKINTER:
-        app = TkinterApp(WINDOW_TITLE, output)
+    if PREFERRED_UI == UI.TKINTER:
+        app = TkinterApp(WINDOW_TITLE, PREFERRED_DEST)
         view = TkinterView(app)
         app.setDownloaderView(view)
         view.root.mainloop()
-        
-    elif ui == UI.KIVY:
+    elif PREFERRED_UI == UI.KIVY:
         app = KivyApp()
         view = KivyView()
         app.setDownloaderView(view)
-        app.setDefaults(WINDOW_TITLE, DEFAULT_FOLDER)
+        app.setDefaults(WINDOW_TITLE, PREFERRED_DEST)
         app.run()
         app.root.mainloop()
-     
-if __name__ == "__main__":
-    main(sys.argv[1:])
