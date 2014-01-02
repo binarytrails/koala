@@ -6,7 +6,7 @@ class UI(Enum):
 
 class LaunchOptions(Enum):
     H = "h?",
-    D = "des=",
+    D = "d=",
     T = "tk",
     K = "kivy"
     

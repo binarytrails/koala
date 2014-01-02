@@ -4,15 +4,15 @@ from view.TkinterView import TkinterView
 from app.KivyApp import KivyApp
 from view.KivyView import KivyView
 
-from Default import UI
-from Default import WINDOW_TITLE
-from Default import DEFAULT_DEST
-from Default import DEFAULT_UI
-from Default import HELP_MESSAGE
-from Default import LaunchOptions
+from src.app.custom.Default import UI
+from src.app.custom.Default import WINDOW_TITLE
+from src.app.custom.Default import DEFAULT_DEST
+from src.app.custom.Default import DEFAULT_UI
+from src.app.custom.Default import HELP_MESSAGE
+from src.app.custom.Default import LaunchOptions
 
 import sys
-from downloader import Youtube
+from src.app.downloader import Youtube
 
 PREFERRED_DEST = DEFAULT_DEST
 PREFERRED_UI = DEFAULT_UI
@@ -26,6 +26,7 @@ def checkKoalaLaunchOptions(args):
         #Help
         if LaunchOptions.H[0] in arg:
             print HELP_MESSAGE
+            exit(0)
         #Destination folder
         elif LaunchOptions.D[0] in arg:
             global PREFERRED_DEST

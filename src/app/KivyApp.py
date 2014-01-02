@@ -3,7 +3,11 @@ from threading import Thread
 from time import sleep
 from threading import RLock
 
-import os
+from custom.Error import YoutubeURL
+
+from urlparse import parse_qs
+from urlparse import urlparse
+import os, re
 
 def synchronized_with_attr(lock_name):
     def decorator(method):
@@ -25,6 +29,7 @@ class KivyApp(App):
     def build(self):
         self.lock = RLock()
         App.title = self.windowTitle
+        self.acceptedVideoFormat = "mp4"
         self.kivyView.build(self)
         return self.kivyView
     
@@ -39,6 +44,10 @@ class KivyApp(App):
         self.defaultFolder = defaultFolder
     
     def downloadAndConvert(self, url, title):
+        code, error, url = self._validateYoutubeURL(url)
+        if code is 1:
+            self.kivyView.showPopup(error)
+            return
         thread = Thread(target = self._downloadAndConvertVideoToMp3, args=[url, title])
         thread.start()
     
@@ -48,11 +57,11 @@ class KivyApp(App):
         self.kivyView.disableDownloadButton()
         
         self.youtube.url = url
-        #get highest resolution available for .mp4 
-        video = self.youtube.filter("mp4")[-1]
+        #get the video with highest resolution available of our format
+        video = self.youtube.filter(self.acceptedVideoFormat)[-1]
         self.youtube.filename = title
         
-        video.download(self.defaultFolder, on_progress=self.__updateDownloadStatus)
+        video.download(self.defaultFolder, on_progress=self.updateDownloadStatus)
         self.kivyView.enableDownloadButton()
         self.kivyView.setStatusLabelText("Downloaded")
         
@@ -71,6 +80,51 @@ class KivyApp(App):
         self.kivyView.enableDownloadButton()
         self.kivyView.setStatusLabelText("Downloaded")
         
-    def __updateDownloadStatus(self, bytes_received, file_size):
+    def updateDownloadStatus(self, bytes_received, file_size):
         percent = bytes_received * 100. / file_size
         self.kivyView.setDownloadProgress(percent)
+        
+    
+    def _get_youtube_video_id(self, url):
+        query = urlparse(url)
+        if query.hostname == 'youtu.be':
+            return query.path[1:]
+        if query.hostname in ('www.youtube.com', 'youtube.com'):
+            if query.path == '/watch':
+                p = parse_qs(query.query)
+                return p['v'][0]
+            if query.path[:7] == '/embed/':
+                return query.path.split('/')[2]
+            if query.path[:3] == '/v/':
+                return query.path.split('/')[2]
+        return None
+
+    def _validateYoutubeURL(self, url):
+        """
+         0: valid link
+         1: error
+        """
+        error = YoutubeURL.INVALID_LINK
+        code = 1
+        youtube_regex = (
+        r'(https?://)?(www\.)?'
+        '(youtube|youtu|youtube-nocookie)\.(com|be)/'
+        '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})|([^&=%\?]{11})')
+
+        youtubeFormat = re.match(youtube_regex, url)
+        if youtubeFormat:
+            video_id = self._get_youtube_video_id(url)
+            #check if exists
+            url = "http://www.youtube.com/watch?v=" + str(video_id)
+            video = None
+            try:
+                self.youtube.url = url
+                #get the video with highest resolution available of our format
+                video = self.youtube.filter(self.acceptedVideoFormat)
+            #Video doesnt exists.
+            except Exception:
+                #TODO: Better exception
+                pass
+            if video:
+                return 0, None, url
+        return code, str(error[0]), url

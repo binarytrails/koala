@@ -1,13 +1,27 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+
 Builder.load_string("""
 <KivyView@ScreenManager>:
     statusLabel: _statusLabel
     downloadButton: _downloadButton
+    menuButton: _menuButton
     progressBar: _progressBar
     titleInput: _titleInput
     destInput: _destInput
     urlInput: _urlInput
+    Screen:
+        name: 'menu'
+        #Giant button, easier than detect bg touch
+        ModalView:
+            Button:
+                id: _menuButton
+                center: self.parent.center
+                markup: True
+                background_normal: '../res/img/bg.jpeg'
+                on_press: root.current = 'main'
     Screen:
         name: 'main'
         #background image
@@ -26,15 +40,13 @@ Builder.load_string("""
             GridLayout:
                 cols: 2
                 Label:
-                    color: 0,0,0
-                    text: 'Youtube URL (doesnt take "http://youtu.be/" links)'
-                TextInput:
-                    id: _urlInput
-                    text: 'http://www.youtube.com/watch?v=jics5IrlDWk'
-                Label:
                     text: 'Koala Home'
                 TextInput:
                     id: _destInput
+                Label:
+                    text: 'Youtube URL'
+                TextInput:
+                    id: _urlInput
                 Label:
                     text: 'Song Title'
                 TextInput:
@@ -51,20 +63,6 @@ Builder.load_string("""
                 size_hint: 1, 0.1
                 id: _progressBar
                 max: 100
-    Screen:
-        name: 'menu'
-        canvas.before:
-            BorderImage:
-                source: '../res/img/bg.jpeg'
-                border: 10, 10, 10, 10
-                pos: self.pos
-                size: self.size
-        Button:
-            size_hint: .3, .1
-            center: self.parent.center
-            text: 'Welcome Koala!'
-            background_down: '../res/img/bg.jpeg'
-            on_press: root.current = 'main'
 """)
 
 class KivyView(ScreenManager):
@@ -73,18 +71,28 @@ class KivyView(ScreenManager):
     """
     def build(self, root):
         self.root = root
+        self._assignMenuButtonText()
         self.destInput.text = self.root.defaultFolder
-    
-    #todo: detect background touch?
-    def on_touch_down(self, touch):
-        if self.transition.is_active:
-            return False
-        return super(ScreenManager, self).on_touch_down(touch)
+        
+    def _assignMenuButtonText(self):
+        self.menuButton.text = """
+            [anchor=title1][size=24]Welcome Koala![/size]
+            [anchor=content]  Enjoy """ + self.root.title
     
     # define the multiplication of a function
     def downloadAndConvert(self):
         self.root.downloadAndConvert(self.urlInput.text, self.titleInput.text)
 
+    def showPopup(self, text):
+        popup = Popup(title='Attention!',
+                      content=Label(text=text, 
+                                    markup=True), 
+                      size_hint=(0.4, 0.4))
+        popup.open()
+    
+    def setUrlInput(self, url):
+        self.urlInput.text = url
+    
     def getDownloadProgress(self):
         return self.progressBar.value
 

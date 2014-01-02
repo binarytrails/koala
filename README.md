@@ -57,6 +57,12 @@ Problems
     	
     		> ./KoalaBeatzHunter.py h?
 
+Support
+-------
+* Only works with MP4 format, which is pretty much in every video.
+* Chooses only the best format of the video to download.
+* Doesnt support over crowded youtube videos of Miley Cyrus with 999,999,999 views.
+
 Notes
 -----
       I will think before using Tkinter.
