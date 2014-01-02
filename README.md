@@ -2,6 +2,19 @@ KoalaBeatzHunter
 ================
 Cross-platform MVC url to mp3 converter
 
+<b>Dependencies</b>
+<table>
+  <tr>
+    <th>Purpose</th><th>Technology</th><th>Android</th><th>Windows</th><th>Mac</th><th>Linux</th>
+  </tr>
+  <tr>
+    <td>Download Youtube Video</td><td>pytube</td><td>Yes</td><td>Yes</td><td>???</td><td>Yes</td>
+  </tr>
+  <tr>
+    <td>Convert MP4 to MP3</td><td>FFmpeg</td><td>Yes</td><td>Yes</td><td>???</td><td>Yes</td>
+  </tr>
+</table>
+
 <b>Terms</b>
 <table>
   <tr>
