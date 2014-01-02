@@ -57,17 +57,18 @@ class KivyApp(App):
         self.kivyView.disableDownloadButton()
         
         self.youtube.url = url
+        self.youtube.filename = title
         #get the video with highest resolution available of our format
         video = self.youtube.filter(self.acceptedVideoFormat)[-1]
-        self.youtube.filename = title
         
         video.download(self.defaultFolder, on_progress=self.updateDownloadStatus)
         self.kivyView.enableDownloadButton()
         self.kivyView.setStatusLabelText("Downloaded")
         
         #do convert
+        #ffmpeg -i prentend\ its\ a\ video\ game.mp4  -f mp3 -ab 320000 -vn music.mp3
         
-        os.remove(self.defaultFolder + title + ".mp4")
+        #os.remove(self.defaultFolder + title + ".mp4")
     
     @synchronized_with_attr("lock")
     def _simulateDownload(self):

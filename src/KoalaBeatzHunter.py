@@ -4,15 +4,15 @@ from view.TkinterView import TkinterView
 from app.KivyApp import KivyApp
 from view.KivyView import KivyView
 
-from src.app.custom.Default import UI
-from src.app.custom.Default import WINDOW_TITLE
-from src.app.custom.Default import DEFAULT_DEST
-from src.app.custom.Default import DEFAULT_UI
-from src.app.custom.Default import HELP_MESSAGE
-from src.app.custom.Default import LaunchOptions
+from app.custom.Default import UI
+from app.custom.Default import WINDOW_TITLE
+from app.custom.Default import DEFAULT_DEST
+from app.custom.Default import DEFAULT_UI
+from app.custom.Default import HELP_MESSAGE
+from app.custom.Default import LaunchOptions
 
 import sys
-from src.app.downloader import Youtube
+from app.downloader import Youtube
 
 PREFERRED_DEST = DEFAULT_DEST
 PREFERRED_UI = DEFAULT_UI

@@ -20,14 +20,15 @@ Builder.load_string("""
                 id: _menuButton
                 center: self.parent.center
                 markup: True
-                background_normal: '../res/img/bg.jpeg'
+                background_normal: '../res/img/bg_blue_grey_M_3.jpg'
                 on_press: root.current = 'main'
     Screen:
         name: 'main'
         #background image
         canvas.before:
             BorderImage:
-                source: '../res/img/bg.jpeg'
+                id: _mainBorderImage
+                source: '../res/img/bg_blue_grey_NW_3.jpg'
                 border: 10, 10, 10, 10
                 pos: self.pos
                 size: self.size
@@ -71,13 +72,7 @@ class KivyView(ScreenManager):
     """
     def build(self, root):
         self.root = root
-        self._assignMenuButtonText()
         self.destInput.text = self.root.defaultFolder
-        
-    def _assignMenuButtonText(self):
-        self.menuButton.text = """
-            [anchor=title1][size=24]Welcome Koala![/size]
-            [anchor=content]  Enjoy """ + self.root.title
     
     # define the multiplication of a function
     def downloadAndConvert(self):
