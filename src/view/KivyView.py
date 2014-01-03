@@ -20,7 +20,7 @@ Builder.load_string("""
                 id: _menuButton
                 center: self.parent.center
                 markup: True
-                background_normal: '../res/img/bg_blue_grey_M_3.jpg'
+                background_normal: '../res/img/bg_middle_3.jpg'
                 on_press: root.current = 'main'
     Screen:
         name: 'main'
@@ -28,7 +28,7 @@ Builder.load_string("""
         canvas.before:
             BorderImage:
                 id: _mainBorderImage
-                source: '../res/img/bg_blue_grey_NW_3.jpg'
+                source: '../res/img/bg_north_west_3.jpg'
                 border: 10, 10, 10, 10
                 pos: self.pos
                 size: self.size
@@ -48,6 +48,7 @@ Builder.load_string("""
                     text: 'Youtube URL'
                 TextInput:
                     id: _urlInput
+                    text: 'http://youtu.be/Bc2sfKn0FOA'
                 Label:
                     text: 'Song Title'
                 TextInput:

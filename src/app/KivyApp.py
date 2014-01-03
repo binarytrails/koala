@@ -3,11 +3,11 @@ from threading import Thread
 from time import sleep
 from threading import RLock
 
-from custom.Error import YoutubeURL
+from src.custom.Error import YoutubeURL
 
 from urlparse import parse_qs
 from urlparse import urlparse
-import os, re
+import re
 
 def synchronized_with_attr(lock_name):
     def decorator(method):

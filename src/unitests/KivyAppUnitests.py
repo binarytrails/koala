@@ -1,7 +1,8 @@
 import unittest
-from KivyApp import KivyApp
-from src.app.downloader import Youtube
-from custom.Error import YoutubeURL
+from src.app.KivyApp import KivyApp
+from src.downloader import Youtube
+from src.custom.Error import YoutubeURL
+
 
 class Test(unittest.TestCase):
     """
