@@ -48,7 +48,7 @@ Builder.load_string("""
                     text: 'Youtube URL'
                 TextInput:
                     id: _urlInput
-                    text: 'http://youtu.be/Bc2sfKn0FOA'
+                    text: 'http://youtu.be/dY7G8HwQaAQ'
                 Label:
                     text: 'Song Title'
                 TextInput:

@@ -1,13 +1,13 @@
 from kivy.app import App
-from threading import Thread
-from time import sleep
-from threading import RLock
-
 from src.custom.Error import YoutubeURL
+import src.custom.Utilities as utils
 
 from urlparse import parse_qs
 from urlparse import urlparse
-import re
+from threading import Thread
+from time import sleep
+from threading import RLock
+import re, os
 
 def synchronized_with_attr(lock_name):
     def decorator(method):
@@ -53,22 +53,27 @@ class KivyApp(App):
     
     @synchronized_with_attr("lock")
     def _downloadAndConvertVideoToMp3(self, url, title):
+        mp4 = title + ".mp4"
+        mp3 = title + ".mp3"
+        
         self.kivyView.setStatusLabelText("Downloading")
         self.kivyView.disableDownloadButton()
-        
         self.youtube.url = url
         self.youtube.filename = title
         #get the video with highest resolution available of our format
         video = self.youtube.filter(self.acceptedVideoFormat)[-1]
-        
         video.download(self.defaultFolder, on_progress=self.updateDownloadStatus)
+        sleep(0.1)
+        
+        self.kivyView.setStatusLabelText("Converting")
+        secs = utils.getFFmpegFileDurationInSeconds(self.defaultFolder + mp4)
+        efsize = utils.estimateFFmpegMp4toMp3NewFileSizeInBytes(secs, 320000)
+        utils.convertMp4ToMp3(mp4, mp3, self.defaultFolder, 320000, 
+                              self.updateDownloadStatus, efsize)
+        self.kivyView.setStatusLabelText("Completed!")
         self.kivyView.enableDownloadButton()
-        self.kivyView.setStatusLabelText("Downloaded")
         
-        #do convert
-        #ffmpeg -i prentend\ its\ a\ video\ game.mp4  -f mp3 -ab 320000 -vn music.mp3
-        
-        #os.remove(self.defaultFolder + title + ".mp4")
+        os.remove(self.defaultFolder + mp4)
     
     @synchronized_with_attr("lock")
     def _simulateDownload(self):
@@ -82,9 +87,8 @@ class KivyApp(App):
         self.kivyView.setStatusLabelText("Downloaded")
         
     def updateDownloadStatus(self, bytes_received, file_size):
-        percent = bytes_received * 100. / file_size
+        percent = float(bytes_received) / float(file_size) * 100
         self.kivyView.setDownloadProgress(percent)
-        
     
     def _get_youtube_video_id(self, url):
         query = urlparse(url)
