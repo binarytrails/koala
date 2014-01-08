@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import src.custom.Utilities as utls
+import src.app.custom.Utilities as utls
 
 filename = "../../tmp/AwesomeKoalaBeat.mp4"
 cmdi = "ffmpeg -i ../../tmp/AwesomeKoalaBeat.mp4 2>&1"

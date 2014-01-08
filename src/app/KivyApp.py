@@ -1,6 +1,6 @@
 from kivy.app import App
-from src.custom.Error import YoutubeURL
-import src.custom.Utilities as utils
+from custom.Error import YoutubeURL
+import custom.Utilities as utils
 
 from urlparse import parse_qs
 from urlparse import urlparse
