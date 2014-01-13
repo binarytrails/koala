@@ -88,7 +88,6 @@ class KivyApp(App):
         while True:
             try:
                 beat = self.__downloadQueue.get()
-
                 self.kivyView.setStatusLabelText("Downloading")
                 self.youtube.url = beat.getUrl()
                 self.youtube.filename = beat.getTitle()
@@ -114,7 +113,6 @@ class KivyApp(App):
         while True:
             try:
                 beat = self.__conversionQueue.get()
-
                 self.kivyView.setStatusLabelText("Converting")
 
                 mp4 = beat.getTitle() + ".mp4"
