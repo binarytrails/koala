@@ -8,7 +8,7 @@ Cross-platform MVC url to mp3 converter
     <th>Purpose</th><th>Technology</th><th>Weight</th><th>Cross-platform</th>
   </tr>
   <tr>
-    <td>Download Youtube Video</td><td>pytube</td>4kB<td></td><td>Yes</td>
+    <td>Download Youtube Video</td><td>pytube</td><td>4kB</td><td>Yes</td>
   </tr>
   <tr>
     <td>Convert Mp4 to Mp3</td><td>FFmpeg</td><td>248kB</td><td>Yes</td>
