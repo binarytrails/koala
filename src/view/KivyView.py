@@ -5,39 +5,27 @@ from kivy.uix.label import Label
 
 Builder.load_string("""
 <KivyView@ScreenManager>:
-    statusLabel: _statusLabel
-    downloadButton: _downloadButton
-    menuButton: _menuButton
-    progressBar: _progressBar
-    titleInput: _titleInput
-    destInput: _destInput
     urlInput: _urlInput
-    Screen:
-        name: 'menu'
-        #Giant button, easier than detect bg touch
-        ModalView:
-            Button:
-                id: _menuButton
-                center: self.parent.center
-                markup: True
-                background_normal: '../res/img/bg_middle_3.jpg'
-                on_press: root.current = 'main'
+    titleInput: _titleInput
+    artistInput: _artistInput
+    albumInput: _albumInput
+    destInput: _destInput
+    yearInput: _yearInput
+    downloadButton: _downloadButton
+    progressBar: _progressBar
+    statusLabel: _statusLabel
     Screen:
         name: 'main'
         #background image
         canvas.before:
             BorderImage:
                 id: _mainBorderImage
-                source: '../res/img/bg_north_west_3.jpg'
+                source: '../res/img/bg.jpeg'
                 border: 10, 10, 10, 10
                 pos: self.pos
                 size: self.size
         BoxLayout:
             orientation: 'vertical'
-            Button:
-                text: 'Back To Menu'
-                size_hint: 0.2, 0.1
-                on_press: root.current = 'menu'
             GridLayout:
                 cols: 2
                 Label:
@@ -48,12 +36,28 @@ Builder.load_string("""
                     text: 'Youtube URL'
                 TextInput:
                     id: _urlInput
-                    text: 'http://youtu.be/dY7G8HwQaAQ'
+                    text: 'http://youtu.be/YaG5SAw1n0c'
                 Label:
-                    text: 'Song Title'
+                    text: 'Title'
                 TextInput:
                     id: _titleInput
                     text: 'AwesomeKoalaBeat'
+                Label:
+                    text: 'Artist'
+                TextInput:
+                    id: _artistInput
+                    text: 'P. cinereus'
+                Label:
+                    text: 'Album'
+                TextInput:
+                    id: _albumInput
+                    text: 'Phascolarctidae'
+                Label:
+                    text: 'Year'
+                TextInput:
+                    id: _yearInput
+                    text: '1817'
+                    disabled: True
                 Label:
                     id: _statusLabel
                     text: 'Status'
@@ -73,11 +77,14 @@ class KivyView(ScreenManager):
     """
     def build(self, root):
         self.root = root
-        self.destInput.text = self.root.defaultFolder
+        self.destInput.text = self.root.getOutputFolder()
     
-    # define the multiplication of a function
     def downloadAndConvert(self):
-        self.root.downloadAndConvert(self.urlInput.text, self.titleInput.text)
+        self.root.buildMp3FromYoutubeLink(self.urlInput.text,
+                                          self.titleInput.text,
+                                          self.artistInput.text,
+                                          self.albumInput.text,
+                                          self.yearInput.text)
 
     def showPopup(self, text):
         popup = Popup(title='Attention!',

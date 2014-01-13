@@ -5,13 +5,16 @@ Cross-platform MVC url to mp3 converter
 <b>Dependencies</b>
 <table>
   <tr>
-    <th>Purpose</th><th>Technology</th><th>Android</th><th>Windows</th><th>Mac</th><th>Linux</th>
+    <th>Purpose</th><th>Technology</th><th>Weight</th><th>Cross-platform</th>
   </tr>
   <tr>
-    <td>Download Youtube Video</td><td>pytube</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td>
+    <td>Download Youtube Video</td><td>pytube</td>Intergrated<td></td><td>Yes</td>
   </tr>
   <tr>
-    <td>Convert MP4 to MP3</td><td>FFmpeg</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td>
+    <td>Convert Mp4 to Mp3</td><td>FFmpeg</td><td>248kB</td><td>Yes</td>
+  </tr>
+  <tr>
+    <td>Write Mp3 Metadata</td><td>Mutagen</td><td>813kB</td><td>Yes</td>
   </tr>
 </table>
 
@@ -34,10 +37,10 @@ Cross-platform MVC url to mp3 converter
     <th>UI</th><th>Got View</th><th>Status</th>
   </tr>
   <tr>
-    <td>Tkinter</td><td>Yes</td><td>Standby</td>
+    <td>Tkinter</td><td>Yes</td><td>Not supported</td>
   </tr>
   <tr>
-    <td>Kivy</td><td>Yes</td><td>Evolving</td>
+    <td>Kivy</td><td>Yes</td><td>Stable, Evolving</td>
   </tr>
 </table>
 

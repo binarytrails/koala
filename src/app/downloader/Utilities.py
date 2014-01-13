@@ -1,4 +1,6 @@
 import re
+from urlparse import parse_qs
+from urlparse import urlparse
 
 def safe_filename(text, max_length=200):
     """
@@ -26,10 +28,21 @@ def safe_filename(text, max_length=200):
     filename = blacklist.sub('', text)
     return truncate(filename)
 
+def get_youtube_video_id(url):
+    query = urlparse(url)
+    if query.hostname == 'youtu.be':
+        return query.path[1:]
+    if query.hostname in ('www.youtube.com', 'youtube.com'):
+        if query.path == '/watch':
+            p = parse_qs(query.query)
+            return p['v'][0]
+        if query.path[:7] == '/embed/':
+            return query.path.split('/')[2]
+        if query.path[:3] == '/v/':
+            return query.path.split('/')[2]
+    return None
+
 def print_download_progress(progress, file_size):
-    """
-    > video.download(TMP_FOLDER, on_progress=Utilities.print_download_progress)
-    """
     percent = progress * 100. / file_size
     status = r"%10d  [%3.2f%%]" % (progress, percent)
     status = status + chr(8) * (len(status) + 1)

@@ -21,7 +21,7 @@ class Video(object):
         self.filename = filename
         self.__dict__.update(**attributes)
 
-    def download(self, path=None, chunk_size=8*1024,
+    def download(self, path=None, beat=None, chunk_size=8*1024,
                  on_progress=None, on_finish=None):
         """
         Downloads the file of the URL defined within the class
@@ -29,6 +29,7 @@ class Video(object):
 
         Keyword arguments:
         path -- Destination directory
+        beat -- Beat object containing file information
         chunk_size -- File size (in bytes) to write to buffer at a time
                       (default: 8 bytes).
         on_progress -- A function to be called every time the buffer was
@@ -51,7 +52,7 @@ class Video(object):
                 self._buffer = response.read(chunk_size)
                 if not self._buffer:
                     if on_finish:
-                        on_finish(fullpath)
+                        on_finish(fullpath, beat)
                     break
 
                 self._bytes_received += len(self._buffer)

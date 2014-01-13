@@ -1,12 +1,16 @@
 from enum import Enum
 
-class YoutubeURL(Enum):
+class Errors(Enum):
     UNKNOWN="""
     Something went wrong.
     Our koala expert is deeply sorry.
     
     Contact:
     [i]m.seva.ivanov@gmail.com[/i]    
+    """,
+    CONVERSION_FAILED="""
+    Conversion failed. :/      
+    We are deeply sorry.        
     """,
     INVALID_LINK="""
     [b]Something went wrong![/b]

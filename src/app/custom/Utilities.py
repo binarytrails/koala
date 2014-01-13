@@ -1,13 +1,17 @@
 import sys, os, errno, re, subprocess
 from subprocess import Popen, PIPE
+from mutagen.easyid3 import EasyID3
 
-def callbackPrint(data, data2):
+def callbackPrint(data, data2=None):
     print data, data2
 
 def executeShellCommand(cmd):
     p = Popen(cmd , shell=True, stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
     return out.rstrip(), err.rstrip(), p.returncode
+
+def fileExists(filename):
+    return os.path.isfile(filename)
 
 def saveToFileAllThePrintDataThatFollows(filename):
     sys.stdout = open(filename, 'w')
@@ -84,23 +88,32 @@ def extractFFmpegFileSize(data):
             res.append(text)
         return res
 
-def convertMp4ToMp3(mp4f, mp3f, odir, kbps, callback=None, efsize=None):
+def convertMp4ToMp3(mp4f, mp3f, odir, kbps, efsize=None, 
+                    beat=None, on_progress=None, on_finish=None):
     """
-    mp4f:     mp4 file
-    mp3f:     mp3 file
+    mp4f:     mp4 file, ex: Video.mp4
+    mp3f:     mp3 file, ex: Beat.mp3
     odir:     output directory
     kbps:     quality in kbps, ex: 320000
-    callback: callback() to recieve progress
-    efsize:   estimated file size, if there is will callback() with %
-    Important:
+    efsize:   estimated file size
+    beat:     beat object containing mp3 information
+    on_progress: called on progress with (size, efsize) in bytes
+    on_finish: called on finish with: (fullpath, beat)
+
+    @Important
     communicate() blocks until the child process returns, so the rest of the lines 
     in your loop will only get executed after the child process has finished running. 
     Reading from stderr will block too, unless you read character by character like here.
+    Simple print to console:
+        sys.stdout.write(char)
+        sys.stdout.flush()
     """
     cmdf = "ffmpeg -i "+ odir+mp4f +" -f mp3 -ab "+ str(kbps) +" -vn "+ odir+mp3f
     lineAfterCarriage = ''
     
-    print deleteFile(odir + mp3f)
+    if fileExists(odir + mp3f):
+        raise Exception("Cant convert. The file " + odir+mp3f + " exists.\n"+
+            "You must delete the file.")
     
     child = subprocess.Popen(cmdf, shell=True, stderr=subprocess.PIPE)
     
@@ -109,15 +122,28 @@ def convertMp4ToMp3(mp4f, mp3f, odir, kbps, callback=None, efsize=None):
         if char == '' and child.poll() != None:
             break
         if char != '':
-            # simple print to console
-#             sys.stdout.write(char)
-#             sys.stdout.flush()
             lineAfterCarriage += char
             if char == '\r':
-                if callback:
+                if on_progress:
                     size = int(extractFFmpegFileSize(lineAfterCarriage)[0])
                     # kb to bytes
                     size *= 1024
                     if efsize:
-                        callback(size, efsize)
+                        on_progress(size, efsize)
                 lineAfterCarriage = ''
+    if on_finish:
+        on_finish(odir+mp3f, beat)
+
+def writeMP3Metadata(fullpath, beat):
+    """
+    fullpath:   ex: path/beat.mp3
+    beat:       object containing the file information
+
+    @Important
+    Year isnt supported
+    """
+    mp3f = EasyID3(fullpath)
+    mp3f["title"] = unicode(beat.getTitle())
+    mp3f["artist"] = unicode(beat.getArtist())
+    mp3f["album"] = unicode(beat.getAlbum())
+    mp3f.save()

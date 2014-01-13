@@ -1,9 +1,7 @@
 #!/usr/bin/python
 from app.TkinterApp import TkinterApp
-from view.TkinterView import TkinterView
 from app.KivyApp import KivyApp
-from view.KivyView import KivyView
-from downloader import Youtube
+from app.downloader import Youtube
 
 from app.custom.Default import UI
 from app.custom.Default import WINDOW_TITLE
@@ -11,6 +9,9 @@ from app.custom.Default import DEFAULT_DEST
 from app.custom.Default import DEFAULT_UI
 from app.custom.Default import HELP_MESSAGE
 from app.custom.Default import LaunchOptions
+
+from view.TkinterView import TkinterView
+from view.KivyView import KivyView
 
 import sys
 
@@ -52,11 +53,12 @@ if __name__ == "__main__":
         view = TkinterView(app)
         app.setDownloaderView(view)
         view.root.mainloop()
+
     elif PREFERRED_UI == UI.KIVY:
         app = KivyApp()
         view = KivyView()
         app.setDownloaderView(view)
-        app.setDefaults(WINDOW_TITLE, PREFERRED_DEST)
+        app.setOutputFolder(PREFERRED_DEST)
         app.setYoutubeDownloader(Youtube.YouTube())
         app.run()
         app.root.mainloop()
