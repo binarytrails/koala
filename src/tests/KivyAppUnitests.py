@@ -1,8 +1,8 @@
 import unittest
-from src.app.KivyApp import KivyApp
-from src.downloader import Youtube
-from src.app.custom.Error import YoutubeURL
 
+from app.KivyApp import KivyApp
+from app.downloader import Youtube
+from app.custom.Error import Errors
 
 class Test(unittest.TestCase):
     """
@@ -70,7 +70,5 @@ class Test(unittest.TestCase):
         #Assert
         self.assertTrue(code is 1)
         self.assertTrue(url == wrong_url)
-        self.assertTrue(error is str(YoutubeURL.INVALID_LINK[0]))
+        self.assertTrue(error is Errors.INVALID_LINK)
 
-if __name__ == "__main__":
-    t = unittest.main()

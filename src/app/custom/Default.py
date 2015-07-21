@@ -11,7 +11,7 @@ class LaunchOptions(Enum):
     K = "kivy"
     
 WINDOW_TITLE = "KoalaBeatzHunter"
-DEFAULT_DEST = "../tmp/"
+DEFAULT_DEST = "~/Music/"
 DEFAULT_UI = UI.KIVY
 HELP_MESSAGE = """
     __                      __
@@ -39,4 +39,5 @@ Basic options:
     tk            <launches tkinter ui>
     kivy          <launches kivy ui>
 
-(C) Koala from the north"""
+Author: Vsevolod Ivanov
+Project: https://github.com/sevaivanov/koalabeatzhunter"""

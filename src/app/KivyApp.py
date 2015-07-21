@@ -8,7 +8,7 @@ from threading import Thread
 from time import sleep
 from threading import RLock
 
-import re, Queue
+import traceback, re, Queue
 
 """
 @todo: 
@@ -172,21 +172,21 @@ class KivyApp(App):
         r'(https?://)?(www\.)?'
         '(youtube|youtu|youtube-nocookie)\.(com|be)/'
         '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})|([^&=%\?]{11})')
-
         youtubeFormat = re.match(youtube_regex, url)
+        
         if youtubeFormat:
             video_id = ytutils.get_youtube_video_id(url)
-            #check if exists
             url = "http://www.youtube.com/watch?v=" + str(video_id)
-            video = None
+            video = None 
             try:
                 self.youtube.url = url
-                #get the video with highest resolution available of our format
-                video = self.youtube.filter(self.__vformat)
-            #Video doesnt exists.
+                # get the highest resolution
+                video = self.youtube.filter(self.__vformat) 
             except Exception:
-                #TODO: Better exception
-                pass
+                print traceback.format_exc()
+
             if video:
                 return 0, None, url
-        return code, str(error[0]), url
+
+        return code, Errors.INVALID_LINK, url
+

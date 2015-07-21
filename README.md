@@ -1,8 +1,28 @@
-KoalaBeatzHunter
-================
-Cross-platform MVC url to mp3 converter
+# KoalaBeatzHunter
 
-<b>Dependencies</b>
+Cross-platform mobile MP3 downloader and converter.
+
+## Available GUI's
+<table>
+  <tr>
+    <th>UI</th><th>View</th><th>Implemented</th>
+  </tr>
+  <tr>
+    <td>Tkinter</td><td>✓</td><td>x</td>
+  </tr>
+  <tr>
+    <td>Kivy</td><td>✓</td><td>✓</td>
+  </tr>
+</table>
+
+## Limitations
+
+* It works with the MP4 format, which is pretty much every video's.
+* It chooses only the best format of the video to download.
+* It does not support over crowded youtube videos of Miley Cyrus with 999,999,999 views.
+
+## Dependencies
+
 <table>
   <tr>
     <th>Purpose</th><th>Technology</th><th>Weight</th><th>Cross-platform</th>
@@ -18,7 +38,15 @@ Cross-platform MVC url to mp3 converter
   </tr>
 </table>
 
-<b>Terms</b>
+## Instructions
+
+### Debian
+
+    sudo apt-get install python-kivy python-tk
+    pip install -r requirements.txt --user
+
+## Terms
+
 <table>
   <tr>
     <th>Term</th><th>Definition</th>
@@ -31,57 +59,27 @@ Cross-platform MVC url to mp3 converter
   </tr>
 </table>
 
-<b>Available UI</b>
-<table>
-  <tr>
-    <th>UI</th><th>Got View</th><th>Status</th>
-  </tr>
-  <tr>
-    <td>Tkinter</td><td>Yes</td><td>Not supported</td>
-  </tr>
-  <tr>
-    <td>Kivy</td><td>Yes</td><td>Stable, Evolving</td>
-  </tr>
-</table>
+# Encountered Issues
 
-Problems
---------
-* Cant update a field from an outside thread started by someone else than the KivyView from the user action.
-	* <b>Consequences</b>
+* Can't update a field from an outside thread started elsewhere than in the KivyView from the user action.
 
-		> I have to break my MVC Pattern. View <-- Controller --> Data, Tools etc.
+	I have to break my MVC Pattern: View <-- Controller --> Model. During the update of the ProgressBar value from the outside thread, I get the new progression value but nothing changes on the screen. Therefore, I'm not able to call my controller to start the downloading thread and I have to start the thread from the KivyView directly.
 
-	* <b>Explanations</b>
+	* Solution
 
-		> When i update the ProgressBar.value from outside thread, i can print and see the new value
-		> but nothing changes on screen so far... So i cant call my controller to start the downloading
-		> thread that will update my ProgressBar. Unstead i have to start the thread from the kiwi application directly.
-
-	* <b>Solution</b>
-
-		> View <--> Controller <--> Data, Tools etc.
+	    View <--> Controller <--> Model
 		
-* Kivy has the default help options that i didnt manage to overwrite
-	* <b>Solution</b>
+* Kivy has default help options that I did not manage to overwrite.
 
-    	I made another help doc so now you have two help.
-    	* Kivy Default
-    	
-    		> ./KoalaBeatzHunter.py -h
-    		
-    	* Koala Custom
-    	
-    		> ./KoalaBeatzHunter.py h?
+    * Solution
 
-Support
--------
-* Only works with MP4 format, which is pretty much in every video.
-* Chooses only the best format of the video to download.
-* Doesnt support over crowded youtube videos of Miley Cyrus with 999,999,999 views.
+        I binded different arguments to the KoalaBeatzHunter help options.
+        
+        * Kivy Default
+        
+                ./KoalaBeatzHunter.py -h
+            
+        * KoalaBeatzHunter
+        
+                ./KoalaBeatzHunter.py h?
 
-Notes
------
-      I will think before using Tkinter.
-      I will try to avoid using Tkinter.
-      I will never use Tkinter.
-Kivy is awesome.

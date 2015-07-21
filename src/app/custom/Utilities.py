@@ -147,3 +147,4 @@ def writeMP3Metadata(fullpath, beat):
     mp3f["artist"] = unicode(beat.getArtist())
     mp3f["album"] = unicode(beat.getAlbum())
     mp3f.save()
+
