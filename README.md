@@ -1,3 +1,5 @@
+# Currently Under Maintenance
+
 # KoalaBeatzHunter
 
 Cross-platform mobile MP3 downloader and converter.
@@ -17,6 +19,7 @@ Cross-platform mobile MP3 downloader and converter.
 
 ## Limitations
 
+* It works only with the Youtube website using the *pytube* package.
 * It works with the MP4 format, which is pretty much every video's.
 * It chooses only the best format of the video to download.
 * It does not support over crowded youtube videos of Miley Cyrus with 999,999,999 views.
