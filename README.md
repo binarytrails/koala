@@ -1,45 +1,21 @@
 # Currently Under Maintenance
 
-# KoalaBeatzHunter
+# Koala
 
-Cross-platform mobile MP3 downloader and converter.
-
-## Available GUI's
-<table>
-  <tr>
-    <th>UI</th><th>View</th><th>Implemented</th>
-  </tr>
-  <tr>
-    <td>Tkinter</td><td>✓</td><td>x</td>
-  </tr>
-  <tr>
-    <td>Kivy</td><td>✓</td><td>✓</td>
-  </tr>
-</table>
+Cross-platform mobile MP3 downloader and converter. The default UI is written in Kivy.
 
 ## Limitations
 
-* It works only with the Youtube website using the *pytube* package.
+* It works only with the Youtube website using the *TODO* package.
 * It works with the MP4 format, which is pretty much every video's.
 * It chooses only the best format of the video to download.
 * It does not support over crowded youtube videos of Miley Cyrus with 999,999,999 views.
 
 ## Dependencies
 
-<table>
-  <tr>
-    <th>Purpose</th><th>Technology</th><th>Weight</th><th>Cross-platform</th>
-  </tr>
-  <tr>
-    <td>Download Youtube Video</td><td>pytube</td><td>4kB</td><td>Yes</td>
-  </tr>
-  <tr>
-    <td>Convert Mp4 to Mp3</td><td>FFmpeg</td><td>248kB</td><td>Yes</td>
-  </tr>
-  <tr>
-    <td>Write Mp3 Metadata</td><td>Mutagen</td><td>813kB</td><td>Yes</td>
-  </tr>
-</table>
+* TODO      Downloader(s)
+* FFmpeg    MP4 -> MP3
+* Mutagen   Write MP3 Metadata
 
 ## Instructions
 
@@ -47,20 +23,6 @@ Cross-platform mobile MP3 downloader and converter.
 
     sudo apt-get install python-kivy python-tk
     pip install -r requirements.txt --user
-
-## Terms
-
-<table>
-  <tr>
-    <th>Term</th><th>Definition</th>
-  </tr>
-  <tr>
-    <td>App</td><td>Controller</td>
-  </tr>
-  <tr>
-    <td>View</td><td>User Interface</td>
-  </tr>
-</table>
 
 # Encountered Issues
 
@@ -76,13 +38,13 @@ Cross-platform mobile MP3 downloader and converter.
 
     * Solution
 
-        I binded different arguments to the KoalaBeatzHunter help options.
+        I binded different arguments to the Koala help options.
         
         * Kivy Default
         
-                ./KoalaBeatzHunter.py -h
+                ./Koala.py -h
             
-        * KoalaBeatzHunter
+        * Koala's way
         
-                ./KoalaBeatzHunter.py h?
+                ./Koala.py h?
 
