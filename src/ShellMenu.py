@@ -1,18 +1,15 @@
 from enum import Enum
 
 class UI(Enum):
-    KIVY=0,
-    TKINTER=1
+    KIVY=0
 
 class LaunchOptions(Enum):
-    H = "h?",
-    D = "d=",
-    T = "tk",
-    K = "kivy"
+    HELP = "h?",
+    DESTINATION = "d=",
     
-WINDOW_TITLE = "KoalaBeatzHunter"
-DEFAULT_DEST = "~/Music/"
+WINDOW_TITLE = "Koala"
 DEFAULT_UI = UI.KIVY
+DEFAULT_DESTINATION = "~/Music/"
 HELP_MESSAGE = """
     __                      __
  .-'  `'.._...-----..._..-'`  '-.
@@ -26,18 +23,13 @@ HELP_MESSAGE = """
       \        \"/         /
        '.    =='^'==     .'
         `'--------------'
-         KoalaBeatzHunter
+              Koala
 
-Usage: ./KoalaBeatzHunter.py des=folder
-
-The default UI is Kivy, to change do:
-$ ./KoalaBeatzHunter.py tk
+Usage: ./Koala.py des=folder
 
 Basic options:
     h?            <koala help message>
     d=            <destination folder>
-    tk            <launches tkinter ui>
-    kivy          <launches kivy ui>
 
 Author: Vsevolod Ivanov
-Project: https://github.com/sevaivanov/koalabeatzhunter"""
+Project: https://github.com/sevaivanov/koala"""

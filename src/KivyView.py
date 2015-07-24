@@ -3,6 +3,8 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 
+import threading, time
+
 Builder.load_string("""
 <KivyView@ScreenManager>:
     urlInput: _urlInput
@@ -72,9 +74,9 @@ Builder.load_string("""
 """)
 
 class KivyView(ScreenManager):
-    """
-    User communication
-    """
+    
+    stop = threading.Event()
+    
     def build(self, root):
         self.root = root
         self.destInput.text = self.root.getOutputFolder()

@@ -1,14 +1,14 @@
-from kivy.app import App
-from custom.Error import Errors
-import custom.Utilities as utils
-import downloader.Utilities as ytutils
 from Beat import Beat
+from kivy.app import App
+
+import Utilities as utils
+from ErrorMessages import Errors
 
 from threading import Thread
-from time import sleep
 from threading import RLock
+from time import sleep
 
-import traceback, re, Queue
+import threading, traceback, re, Queue
 
 """
 @todo: 
@@ -38,19 +38,35 @@ class KivyApp(App):
     __wtitle = "AwesomeKoalaBeat"
     __ofolder = ""
     __vformat = "mp4"
-    __downloadQueue = Queue.Queue()
-    __conversionQueue = Queue.Queue()
+    
     __lock = RLock()
+    _beatToDownload = Queue.Queue()
+    _beatToConvert = Queue.Queue()
+    
+    _stopDownloaderThread = threading.Event()
+    _stopConverterThread = threading.Event()
+    
+    # Fired when the App has finished running.
+    def on_stop(self):
+        self.root.stop.set()
+        self._stopDownloaderThread.set()
+        self._stopConverterThread.set()
+
+    def _init_threads(self):
+        self._downloaderThread = Thread(target = self._downloader,
+                args=[self._stopDownloaderThread])
+        self._converterThread = Thread(target = self._converter, 
+                args=[self._stopConverterThread])
 
     def build(self):
         App.title = self.__wtitle
-        Thread(target = self._downloader, args=[]).start()
-        Thread(target = self._converter, args=[]).start()
+        self._init_threads()
         self.kivyView.build(self)
         return self.kivyView
     
     def setYoutubeDownloader(self, downloader):
-        self.youtube = downloader
+        pass
+        #self.youtube = downloader
     
     def setDownloaderView(self, kivyView):
         self.kivyView = kivyView
@@ -74,45 +90,57 @@ class KivyApp(App):
             return
         
         beat = Beat(url, title, artist, album, year)
-        self.__downloadQueue.put(beat)
+        self._beatToDownload.put(beat)
 
     def updateProgress(self, bytes_received, file_size):
         percent = float(bytes_received) / float(file_size) * 100
         self.kivyView.setDownloadProgress(percent)
 
-    def _downloader(self):
-        """
-        Listens the __downloadQueue
-        Downloads youtube video with the highest mp4 resolution
-        """
-        while True:
-            try:
-                beat = self.__downloadQueue.get()
-                self.kivyView.setStatusLabelText("Downloading")
-                self.youtube.url = beat.getUrl()
-                self.youtube.filename = beat.getTitle()
-                #get the video highest resolution
-                video = self.youtube.filter(self.__vformat)[-1]
+    def notifyDownloadCompleted(self, beat):
+        self._beatToConvert.put(beat)
 
-                video.download(self.__ofolder, beat,
-                    on_progress=self.updateProgress,
-                    on_finish=self.notifyDownloadCompleted)
+    def _downloader(self, stopEvent):
+        """
+            Downloads the beat that arrives to _beatToDownload.
+        """
+        while (not stopEvent.is_set()):
+            try:
+                beat = self._beatToDownload.get()
+                self.kivyView.setStatusLabelText("Downloading")
+                
+                #self.youtube.url = beat.getUrl()
+                #self.youtube.filename = beat.getTitle()
+                #get the video highest resolution
+                #video = self.youtube.filter(self.__vformat)[-1]
+
+                #video.download(self.__ofolder, beat,
+                #    on_progress=self.updateProgress,
+                #    on_finish=self.notifyDownloadCompleted)
+
+                # temp
+                sleep(2)
+                self.notifyDownloadCompleted(beat)
 
             except Queue.Empty:
                 pass
+    
+    def notifyConversionCompleted(self, fullpath, beat):
+        self.kivyView.setStatusLabelText("Saving Beat Information")
+        utils.writeMP3Metadata(fullpath, beat)
 
-    def notifyDownloadCompleted(self, fullpath, beat):
-        self.__conversionQueue.put(beat)
+        utils.deleteFile(self.__ofolder + beat.getTitle()+".mp4")
+
+        self.kivyView.setStatusLabelText("Completed!")
+        self.kivyView.enableDownloadButton()
 
     #@synchronized_with_attr("lock")
-    def _converter(self):
+    def _converter(self, stopEvent):
         """
-        Listens the __conversionQueue
-        Converts mp4 to mp3 from __conversionQueue
+            Converts the MP4 to MP3 that arrives in _beatToConvert.
         """
-        while True:
+        while (not stopEvent.is_set()):
             try:
-                beat = self.__conversionQueue.get()
+                beat = self._beatToConvert.get()
                 self.kivyView.setStatusLabelText("Converting")
 
                 mp4 = beat.getTitle() + ".mp4"
@@ -124,33 +152,14 @@ class KivyApp(App):
                 elif utils.fileExists(self.__ofolder+mp3):
                     #@TODO offer choice to the user.
                     utils.deleteFile(self.__ofolder+mp3)
-                """
-                :Case
-                The file uploading was intereptuded, but the file lenght stays the initial.
-
-                :Problem
-                Progressbar wont show the right progression because the mp4 duration
-                isnt right, so the efsize isnt estimated proprelly.
-
-                :Solution
-                This function wont be called if the downloading was interruped.
-                """
+                
                 secs = utils.getFFmpegFileDurationInSeconds(self.__ofolder + mp4)
                 efsize = utils.estimateFFmpegMp4toMp3NewFileSizeInBytes(secs, 320000)
                 utils.convertMp4ToMp3(mp4, mp3, self.__ofolder, 320000, efsize, beat,
                                       self.updateProgress, self.notifyConversionCompleted)
             except Queue.Empty:
                 pass
-
-    def notifyConversionCompleted(self, fullpath, beat):
-        self.kivyView.setStatusLabelText("Saving Beat Information")
-        utils.writeMP3Metadata(fullpath, beat)
-
-        utils.deleteFile(self.__ofolder + beat.getTitle()+".mp4")
-
-        self.kivyView.setStatusLabelText("Completed!")
-        self.kivyView.enableDownloadButton()
-    
+ 
     def _simulateDownload(self):
         self.kivyView.setStatusLabelText("Downloading")
         self.kivyView.disableDownloadButton()
@@ -175,13 +184,14 @@ class KivyApp(App):
         youtubeFormat = re.match(youtube_regex, url)
         
         if youtubeFormat:
-            video_id = ytutils.get_youtube_video_id(url)
+            video_id = utils.getYoutubeVideoId(url)
             url = "http://www.youtube.com/watch?v=" + str(video_id)
             video = None 
             try:
-                self.youtube.url = url
+                pass
+                #self.youtube.url = url
                 # get the highest resolution
-                video = self.youtube.filter(self.__vformat) 
+                #video = self.youtube.filter(self.__vformat) 
             except Exception:
                 print traceback.format_exc()
 
