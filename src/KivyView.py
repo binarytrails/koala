@@ -3,9 +3,11 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 
-import os, time, threading
+import os, threading
 
 Builder.load_string("""
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+
 <KivyView@ScreenManager>:
     url: _url
     title: _title
@@ -13,9 +15,24 @@ Builder.load_string("""
     album: _album
     dest: _dest
     year: _year
-    download: _download
+    downloadButton: _downloadButton
     progressBar: _progressBar
     status: _status
+
+    transition: FadeTransition()
+    
+    Screen:
+        name: 'Home'
+        ModalView:
+            Button:
+                id: _homeButton
+                center: self.parent.center 
+                background_normal: root.getHomeBackground()
+                text: 'Welcome to Koala'
+                font_size: 30
+                on_press:
+                    #root.transition.direction = 'down'
+                    root.current = 'Downloader'
     Screen:
         name: 'Downloader'
         canvas.before:
@@ -63,7 +80,7 @@ Builder.load_string("""
                     id: _status
                     text: 'Status'
                 Button:
-                    id: _download
+                    id: _downloadButton
                     text: 'Download'
                     on_press: root.downloadAndConvert()
             ProgressBar:
@@ -75,7 +92,10 @@ Builder.load_string("""
 class KivyView(ScreenManager):
     
     stop = threading.Event()
-   
+
+    _ressourcesDir = os.path.join(os.path.abspath(os.pardir), "resources/")
+    _imagesDir = os.path.join(_ressourcesDir, "images")
+
     def moqDevelopmentValues(self):
         self.url.text = "http://youtu.be/YaG5SAw1n0c"
         self.title.text = "Beautiful Koala"
@@ -89,16 +109,16 @@ class KivyView(ScreenManager):
         self.dest.text = self.root.getOutputFolder()
     
     def enableDownloadButton(self):
-        self.download.disabled = False
+        self.downloadButton.disabled = False
     
     def disableDownloadButton(self):
-        self.download.disabled = True
+        self.downloadButton.disabled = True
 
-    def getRessourcesDir(self):
-        return os.path.join(os.path.abspath(os.pardir), "resources/")
+    def getHomeBackground(self):
+        return os.path.join(self._imagesDir, "blue_background.jpg")
 
     def getDownloaderBackground(self):
-        return os.path.join(self.getRessourcesDir(), "images/bg.jpeg")
+        return os.path.join(self._imagesDir, "blue_background.jpg")
 
     def getDownloadProgress(self):
         return self.progressBar.value
