@@ -3,26 +3,25 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 
-import threading, time
+import os, time, threading
 
 Builder.load_string("""
 <KivyView@ScreenManager>:
-    urlInput: _urlInput
-    titleInput: _titleInput
-    artistInput: _artistInput
-    albumInput: _albumInput
-    destInput: _destInput
-    yearInput: _yearInput
-    downloadButton: _downloadButton
+    url: _url
+    title: _title
+    artist: _artist
+    album: _album
+    dest: _dest
+    year: _year
+    download: _download
     progressBar: _progressBar
-    statusLabel: _statusLabel
+    status: _status
     Screen:
-        name: 'main'
-        #background image
+        name: 'Downloader'
         canvas.before:
             BorderImage:
-                id: _mainBorderImage
-                source: '../res/img/bg.jpeg'
+                id: _downloaderBackground
+                source: root.getDownloaderBackground()
                 border: 10, 10, 10, 10
                 pos: self.pos
                 size: self.size
@@ -31,40 +30,40 @@ Builder.load_string("""
             GridLayout:
                 cols: 2
                 Label:
-                    text: 'Koala Home'
+                    text: 'Home'
                 TextInput:
-                    id: _destInput
+                    id: _dest
                 Label:
-                    text: 'Youtube URL'
+                    text: 'URL'
                 TextInput:
-                    id: _urlInput
-                    text: 'http://youtu.be/YaG5SAw1n0c'
+                    id: _url
+                    text: ''
                 Label:
                     text: 'Title'
                 TextInput:
-                    id: _titleInput
-                    text: 'AwesomeKoalaBeat'
+                    id: _title
+                    text: ''
                 Label:
                     text: 'Artist'
                 TextInput:
-                    id: _artistInput
-                    text: 'P. cinereus'
+                    id: _artist
+                    text: ''
                 Label:
                     text: 'Album'
                 TextInput:
-                    id: _albumInput
-                    text: 'Phascolarctidae'
+                    id: _album
+                    text: ''
                 Label:
                     text: 'Year'
                 TextInput:
-                    id: _yearInput
-                    text: '1817'
+                    id: _year
+                    text: ''
                     disabled: True
                 Label:
-                    id: _statusLabel
+                    id: _status
                     text: 'Status'
                 Button:
-                    id: _downloadButton
+                    id: _download
                     text: 'Download'
                     on_press: root.downloadAndConvert()
             ProgressBar:
@@ -76,39 +75,53 @@ Builder.load_string("""
 class KivyView(ScreenManager):
     
     stop = threading.Event()
-    
+   
+    def moqDevelopmentValues(self):
+        self.url.text = "http://youtu.be/YaG5SAw1n0c"
+        self.title.text = "Beautiful Koala"
+        self.artist.text = "P. Cinereus"
+        self.album.text = "Phascolarctidae"
+        self.year.text = "Not Supported."
+
     def build(self, root):
         self.root = root
-        self.destInput.text = self.root.getOutputFolder()
+        self.moqDevelopmentValues()
+        self.dest.text = self.root.getOutputFolder()
     
-    def downloadAndConvert(self):
-        self.root.buildMp3FromYoutubeLink(self.urlInput.text,
-                                          self.titleInput.text,
-                                          self.artistInput.text,
-                                          self.albumInput.text,
-                                          self.yearInput.text)
+    def enableDownloadButton(self):
+        self.download.disabled = False
+    
+    def disableDownloadButton(self):
+        self.download.disabled = True
 
-    def showPopup(self, text):
-        popup = Popup(title='Attention!',
-                      content=Label(text=text, 
-                                    markup=True), 
-                      size_hint=(0.4, 0.4))
-        popup.open()
-    
-    def setUrlInput(self, url):
-        self.urlInput.text = url
-    
+    def getRessourcesDir(self):
+        return os.path.join(os.path.abspath(os.pardir), "resources/")
+
+    def getDownloaderBackground(self):
+        return os.path.join(self.getRessourcesDir(), "images/bg.jpeg")
+
     def getDownloadProgress(self):
         return self.progressBar.value
 
-    def setDownloadProgress(self, value):
-        self.progressBar.value = value
-        
-    def disableDownloadButton(self):
-        self.downloadButton.disabled = True
+    def setUrl(self, url):
+        self.url.text = url
     
-    def enableDownloadButton(self):
-        self.downloadButton.disabled = False
-        
     def setStatusLabelText(self, text):
-        self.statusLabel.text = text
+        self.status.text = text
+    
+    def setDownloadProgress(self, value):
+        self.progressBar.value = value    
+    
+    def downloadAndConvert(self):
+        self.root.buildMp3FromYoutubeLink(self.url.text,
+                                          self.title.text,
+                                          self.artist.text,
+                                          self.album.text,
+                                          self.year.text)
+
+    def showPopup(self, text):
+        popup = Popup(title='Attention!',
+                      content=Label(text = text, markup = True), 
+                      size_hint=(0.4, 0.4))
+        popup.open()
+        
