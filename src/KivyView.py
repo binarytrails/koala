@@ -93,7 +93,7 @@ class KivyView(ScreenManager):
     
     stop = threading.Event()
 
-    _ressourcesDir = os.path.join(os.path.abspath(os.pardir), "resources/")
+    _ressourcesDir = os.path.join(os.path.abspath(os.pardir), "res/")
     _imagesDir = os.path.join(_ressourcesDir, "images")
 
     def moqDevelopmentValues(self):
