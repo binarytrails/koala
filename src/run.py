@@ -24,7 +24,7 @@ Opitons:
     -o, --output=DIR    Output music to this directory [default: ~/Music].
     -g, --gui=<gui>     Use one of the GUIs from the following: (kivy,) [default: kivy].
 
-Author: Vsevolod Ivanov
+Author: Seva Ivanov
 Project: https://github.com/sevaivanov/koala
 '''
 
